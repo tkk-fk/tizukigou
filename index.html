@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ちずきごう フラッシュカード｜3年生の地図記号</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7F1E3;
+    --card-bg:#FFFDF6;
+    --ink:#4A443C;
+    --ink-soft:#7A7266;
+    --symbol-ink:#3B3830;
+    --green:#A8D8A0; --green-d:#7FBE76;
+    --orange:#F5C486; --orange-d:#DDA155;
+    --purple:#C9B3E0; --purple-d:#A98FCB;
+    --blue:#A9CCE3; --blue-d:#7FAFD0;
+    --pink:#F2B8C6; --pink-d:#DE8FA3;
+    --line:#E6DCC6;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'BIZ UDPGothic',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    min-height:100dvh;
+    overscroll-behavior:none;
+  }
+  .app{
+    max-width:680px;margin:0 auto;
+    min-height:100vh;min-height:100dvh;
+    display:flex;flex-direction:column;
+    padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 16px);
+  }
+  h1,h2,.dispfont{font-family:'Zen Maru Gothic',sans-serif;}
+  .hidden{display:none !important;}
+
+  /* ===== 3D pastel buttons ===== */
+  .btn{
+    font-family:'Zen Maru Gothic',sans-serif;font-weight:700;
+    border:none;border-radius:18px;cursor:pointer;
+    color:var(--ink);
+    padding:16px 20px;font-size:clamp(1.05rem,4.5vw,1.35rem);
+    box-shadow:0 6px 0 var(--btn-d),0 8px 10px rgba(0,0,0,.12);
+    transition:transform .06s ease,box-shadow .06s ease;
+    touch-action:manipulation;user-select:none;
+    background:var(--btn);
+  }
+  .btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--btn-d),0 2px 4px rgba(0,0,0,.12);}
+  .btn.green{--btn:var(--green);--btn-d:var(--green-d);}
+  .btn.orange{--btn:var(--orange);--btn-d:var(--orange-d);}
+  .btn.purple{--btn:var(--purple);--btn-d:var(--purple-d);}
+  .btn.blue{--btn:var(--blue);--btn-d:var(--blue-d);}
+  .btn.pink{--btn:var(--pink);--btn-d:var(--pink-d);}
+
+  /* ===== SETTINGS ===== */
+  .head{text-align:center;margin:6px 0 14px;}
+  .head h1{font-size:clamp(1.5rem,7vw,2.2rem);font-weight:900;margin:0;color:var(--ink);letter-spacing:.02em;}
+  .head p{margin:6px 0 0;color:var(--ink-soft);font-size:clamp(.9rem,3.6vw,1.05rem);}
+
+  .panel{
+    background:var(--card-bg);border-radius:22px;padding:18px;margin-bottom:16px;
+    box-shadow:0 4px 0 var(--line),0 6px 14px rgba(0,0,0,.06);
+  }
+  .label{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:1.05rem;margin:0 0 12px;color:var(--ink);text-align:center;}
+  .count-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .count-btn{
+    font-family:'Zen Maru Gothic',sans-serif;font-weight:700;
+    border:3px solid var(--line);background:#fff;border-radius:16px;
+    padding:16px 6px;cursor:pointer;color:var(--ink-soft);
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    transition:all .12s ease;touch-action:manipulation;
+  }
+  .count-btn .num{font-size:clamp(1.5rem,7vw,2rem);line-height:1;}
+  .count-btn .unit{font-size:.85rem;}
+  .count-btn[aria-pressed="true"]{
+    border-color:var(--blue-d);background:#EAF3FA;color:var(--ink);
+    box-shadow:0 4px 0 var(--blue-d);transform:translateY(-1px);
+  }
+  .start-wrap{margin-top:16px;}
+  .start-btn{width:100%;font-size:clamp(1.2rem,5.5vw,1.5rem);padding:18px;}
+
+  .list-head{display:flex;align-items:center;gap:8px;justify-content:center;margin:2px 0 14px;}
+  .list-head h2{font-size:1.15rem;font-weight:700;margin:0;color:var(--ink);}
+  .list-head .cnt{background:var(--purple);color:#3f3350;border-radius:999px;padding:2px 12px;font-size:.85rem;font-weight:700;font-family:'Zen Maru Gothic',sans-serif;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+  .cell{
+    background:#fff;border:2px solid var(--line);border-radius:16px;
+    padding:10px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .cell .sym{width:64px;height:64px;color:var(--symbol-ink);}
+  .cell .nm{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:.95rem;text-align:center;line-height:1.25;color:var(--ink);}
+  .cell ruby rt{font-size:.62em;color:var(--ink-soft);font-weight:500;}
+
+  /* ===== FLASHCARD ===== */
+  #flash{flex:1;display:flex;flex-direction:column;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;}
+  .progress{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:1.2rem;color:var(--ink);}
+  .progress b{color:var(--blue-d);font-size:1.5rem;}
+  .quit-btn{
+    font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:.95rem;
+    border:none;background:#fff;border:2px solid var(--line);color:var(--ink-soft);
+    border-radius:14px;padding:8px 16px;cursor:pointer;touch-action:manipulation;
+  }
+  .quit-btn:active{background:#f0ead9;}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+  .dot.done{background:var(--green-d);}
+  .dot.now{background:var(--blue-d);transform:scale(1.35);}
+
+  .card{
+    flex:1;background:var(--card-bg);border-radius:28px;
+    box-shadow:0 8px 0 var(--line),0 12px 24px rgba(0,0,0,.08);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;cursor:pointer;position:relative;overflow:hidden;
+    touch-action:manipulation;user-select:none;-webkit-user-select:none;
+    min-height:52vh;
+  }
+  .card:active{transform:translateY(3px);box-shadow:0 5px 0 var(--line),0 8px 16px rgba(0,0,0,.08);}
+  .card .sym{
+    width:min(58vw,300px);height:min(58vw,300px);color:var(--symbol-ink);
+    transition:transform .22s ease;
+  }
+  .card.revealed .sym{transform:translateY(-6px) scale(.9);}
+  .name-area{
+    height:0;opacity:0;overflow:hidden;text-align:center;
+    transition:opacity .22s ease,height .22s ease,margin .22s ease;margin-top:0;
+  }
+  .card.revealed .name-area{height:auto;opacity:1;margin-top:10px;}
+  .name-area .nm{font-family:'Zen Maru Gothic',sans-serif;font-weight:900;font-size:clamp(1.8rem,9vw,3rem);color:var(--ink);line-height:1.1;}
+  .name-area ruby rt{font-size:.42em;color:var(--ink-soft);font-weight:700;}
+  .hint{
+    text-align:center;margin-top:14px;color:var(--ink-soft);
+    font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:clamp(.95rem,4vw,1.15rem);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .hint .tap-ico{font-size:1.2em;animation:tap 1.3s ease-in-out infinite;}
+  @keyframes tap{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+
+  /* ===== RESULT ===== */
+  #result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;}
+  #result .emoji{font-size:clamp(3.5rem,18vw,6rem);line-height:1;}
+  #result h2{font-family:'Zen Maru Gothic',sans-serif;font-weight:900;font-size:clamp(1.6rem,8vw,2.4rem);margin:6px 0;color:var(--ink);}
+  #result p{color:var(--ink-soft);margin:0 0 18px;font-size:1.05rem;}
+  #result .actions{display:flex;flex-direction:column;gap:14px;width:min(90%,340px);}
+  #result .actions .btn{width:100%;}
+
+  /* sound toggle */
+  .sound-toggle{
+    position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:14px;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--line);
+    background:var(--card-bg);cursor:pointer;font-size:1.3rem;
+    display:flex;align-items:center;justify-content:center;z-index:20;
+    touch-action:manipulation;box-shadow:0 3px 0 var(--line);
+  }
+  .sound-toggle:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line);}
+</style>
+</head>
+<body>
+<button class="sound-toggle" id="soundToggle" aria-label="おと">🔊</button>
+<div class="app">
+
+  <!-- ===================== SETTINGS ===================== -->
+  <section id="settings">
+    <div class="head">
+      <h1>ちずきごう フラッシュカード</h1>
+      <p>3年生で ならう 地図記号（ちずきごう）を おぼえよう</p>
+    </div>
+
+    <div class="panel">
+      <p class="label">もんだいの かずを えらんでね</p>
+      <div class="count-row" id="countRow">
+        <button class="count-btn" data-count="5" aria-pressed="true"><span class="num">5</span><span class="unit">もん</span></button>
+        <button class="count-btn" data-count="10" aria-pressed="false"><span class="num">10</span><span class="unit">もん</span></button>
+        <button class="count-btn" data-count="all" aria-pressed="false"><span class="num">ぜんぶ</span><span class="unit" id="allUnit"></span></button>
+      </div>
+      <div class="start-wrap">
+        <button class="btn green start-btn dispfont" id="startBtn">▶ スタート</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="list-head">
+        <h2>ちずきごう いちらん</h2>
+        <span class="cnt" id="listCnt"></span>
+      </div>
+      <div class="grid" id="listGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== FLASHCARD ===================== -->
+  <section id="flash" class="hidden">
+    <div class="topbar">
+      <div class="progress"><b id="pNow">1</b> / <span id="pTotal">5</span></div>
+      <button class="quit-btn dispfont" id="quitBtn">やめる</button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="card" id="card" role="button" tabindex="0" aria-label="フラッシュカード">
+      <div class="sym" id="cardSym"></div>
+      <div class="name-area" id="nameArea"></div>
+    </div>
+    <div class="hint" id="hint"><span class="tap-ico">👆</span><span id="hintText">タップして こたえを みる</span></div>
+  </section>
+
+  <!-- ===================== RESULT ===================== -->
+  <section id="result" class="hidden">
+    <div class="emoji">🎉</div>
+    <h2>ぜんぶ おわり！</h2>
+    <p id="resultMsg">よく がんばったね！</p>
+    <div class="actions">
+      <button class="btn orange dispfont" id="againBtn">🔁 もう一度</button>
+      <button class="btn blue dispfont" id="backBtn">⚙ せっていに もどる</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ========= 地図記号データ（3年生・24種）=========
+   svg は viewBox 0 0 100 100 の中身。色は currentColor。 */
+function S(inner){ return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>'; }
+
+var SYMBOLS = [
+  /* ===== 学校・役所・公共施設 ===== */
+  { name:"小・中学校", yomi:"しょう・ちゅうがっこう", svg:S(
+    '<text x="50" y="53" text-anchor="middle" dominant-baseline="central" font-size="62" font-family="\'Zen Maru Gothic\',sans-serif" font-weight="700" fill="currentColor">文</text>') },
+
+  { name:"高等学校", yomi:"こうとうがっこう", svg:S(
+    '<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="5"/>'+
+    '<text x="50" y="53" text-anchor="middle" dominant-baseline="central" font-size="44" font-family="\'Zen Maru Gothic\',sans-serif" font-weight="700" fill="currentColor">文</text>') },
+
+  { name:"都道府県庁", yomi:"とどうふけんちょう", svg:S(
+    '<ellipse cx="50" cy="50" rx="31" ry="20" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<ellipse cx="50" cy="50" rx="14" ry="9" fill="none" stroke="currentColor" stroke-width="6"/>') },
+
+  { name:"市役所", yomi:"しやくしょ", svg:S(
+    '<circle cx="50" cy="50" r="28" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<circle cx="50" cy="50" r="13" fill="none" stroke="currentColor" stroke-width="6"/>') },
+
+  { name:"町・村役場", yomi:"まち・むらやくば", svg:S(
+    '<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="7"/>') },
+
+  { name:"郵便局", yomi:"ゆうびんきょく", svg:S(
+    '<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="5"/>'+
+    '<text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-size="40" font-family="\'BIZ UDPGothic\',sans-serif" font-weight="700" fill="currentColor">〒</text>') },
+
+  { name:"交番", yomi:"こうばん", svg:S(
+    '<path d="M32 32 L68 68 M68 32 L32 68" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>') },
+
+  { name:"警察署", yomi:"けいさつしょ", svg:S(
+    '<circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<path d="M38 38 L62 62 M62 38 L38 62" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>') },
+
+  { name:"消防署", yomi:"しょうぼうしょ", svg:S(
+    '<path d="M30 26 L30 40 A20 20 0 0 0 70 40 L70 26" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<line x1="50" y1="56" x2="50" y2="78" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>') },
+
+  { name:"病院", yomi:"びょういん", svg:S(
+    '<path d="M28 26 L72 26 L72 56 L50 78 L28 56 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>'+
+    '<g stroke="currentColor" stroke-width="8" stroke-linecap="round"><line x1="50" y1="33" x2="50" y2="63"/><line x1="35" y1="47" x2="65" y2="47"/></g>') },
+
+  { name:"図書館", yomi:"としょかん", svg:S(
+    '<path d="M50 30 C42 24 28 24 20 28 L20 68 C28 64 42 64 50 70 C58 64 72 64 80 68 L80 28 C72 24 58 24 50 30 Z" '+
+    'fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>'+
+    '<path d="M50 30 L50 70" fill="none" stroke="currentColor" stroke-width="5"/>') },
+
+  { name:"博物館", yomi:"はくぶつかん", svg:S(
+    '<path d="M50 20 L26 38 L74 38 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>'+
+    '<g fill="currentColor"><rect x="22" y="38" width="56" height="7" rx="1.5"/>'+
+    '<rect x="31" y="46" width="7" height="26" rx="1"/><rect x="46.5" y="46" width="7" height="26" rx="1"/><rect x="62" y="46" width="7" height="26" rx="1"/>'+
+    '<rect x="20" y="73" width="60" height="8" rx="2"/></g>') },
+
+  { name:"老人ホーム", yomi:"ろうじんホーム", svg:S(
+    '<path d="M26 46 L50 28 L74 46" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<path d="M32 44 L32 74 L68 74 L68 44" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>'+
+    '<path d="M45 52 Q45 47 50 47 Q55 47 55 52 L55 68" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>') },
+
+  { name:"工場", yomi:"こうじょう", svg:S(
+    '<g fill="currentColor">'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(0 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(45 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(90 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(135 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(180 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(225 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(270 50 50)"/>'+
+    '<rect x="45.5" y="10" width="9" height="17" rx="2" transform="rotate(315 50 50)"/></g>'+
+    '<circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="10"/>') },
+
+  { name:"発電所・変電所", yomi:"はつでんしょ・へんでんしょ", svg:S(
+    '<g fill="currentColor">'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(0 50 50)"/>'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(60 50 50)"/>'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(120 50 50)"/>'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(180 50 50)"/>'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(240 50 50)"/>'+
+    '<rect x="46" y="17" width="8" height="14" rx="2" transform="rotate(300 50 50)"/></g>'+
+    '<circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="8"/>'+
+    '<path d="M70 50 L83 50 L83 20" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<path d="M30 50 L17 50 L17 82" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>') },
+
+  /* ===== 神社・寺 ===== */
+  { name:"神社", yomi:"じんじゃ", svg:S(
+    '<g fill="currentColor"><rect x="31" y="34" width="8" height="44" rx="2"/><rect x="61" y="34" width="8" height="44" rx="2"/>'+
+    '<rect x="23" y="29" width="54" height="8" rx="3"/><rect x="29" y="44" width="42" height="7" rx="2"/></g>') },
+
+  { name:"寺", yomi:"てら", svg:S(
+    '<path d="M50 22 L50 78 M22 50 L78 50 M50 22 L36 22 M78 50 L78 36 M50 78 L64 78 M22 50 L22 64" '+
+    'fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>') },
+
+  /* ===== 自然・地形・その他 ===== */
+  { name:"灯台", yomi:"とうだい", svg:S(
+    '<circle cx="50" cy="52" r="12" fill="none" stroke="currentColor" stroke-width="5"/>'+
+    '<circle cx="50" cy="52" r="4" fill="currentColor"/>'+
+    '<g stroke="currentColor" stroke-width="5" stroke-linecap="round">'+
+    '<line x1="50" y1="34" x2="50" y2="22"/><line x1="50" y1="70" x2="50" y2="82"/>'+
+    '<line x1="68" y1="52" x2="80" y2="52"/><line x1="32" y1="52" x2="20" y2="52"/>'+
+    '<line x1="63" y1="39" x2="72" y2="30"/><line x1="37" y1="39" x2="28" y2="30"/>'+
+    '<line x1="63" y1="65" x2="72" y2="74"/><line x1="37" y1="65" x2="28" y2="74"/></g>') },
+
+  { name:"風車", yomi:"ふうしゃ", svg:S(
+    '<line x1="50" y1="51" x2="50" y2="79" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>'+
+    '<line x1="40" y1="79" x2="60" y2="79" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>'+
+    '<g stroke="currentColor" stroke-width="6" stroke-linecap="round">'+
+    '<line x1="47" y1="37" x2="39" y2="20"/>'+
+    '<line x1="57" y1="47" x2="75" y2="55"/>'+
+    '<line x1="45" y1="50" x2="28" y2="61"/></g>'+
+    '<circle cx="50" cy="44" r="7" fill="none" stroke="currentColor" stroke-width="5"/>') },
+
+  { name:"温泉", yomi:"おんせん", svg:S(
+    '<path d="M24 60 Q24 72 50 72 Q76 72 76 60" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>'+
+    '<path d="M38 50 Q32 44 38 38 Q44 32 38 26" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M50 52 Q44 46 50 40 Q56 34 50 28" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M62 50 Q56 44 62 38 Q68 32 62 26" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>') },
+
+  { name:"港", yomi:"みなと", svg:S(
+    '<circle cx="50" cy="22" r="7" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<g fill="currentColor"><rect x="47" y="28" width="6" height="44" rx="3"/><rect x="34" y="36" width="32" height="6" rx="3"/></g>'+
+    '<path d="M26 54 Q26 74 50 76 Q74 74 74 54" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>') },
+
+  { name:"城あと", yomi:"しろあと", svg:S(
+    '<path d="M28 80 L28 47 L40 47 L40 26 L60 26 L60 47 L72 47 L72 80" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>') },
+
+  { name:"三角点", yomi:"さんかくてん", svg:S(
+    '<polygon points="50,26 74,70 26,70" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>'+
+    '<circle cx="50" cy="57" r="6" fill="currentColor"/>') },
+
+  /* ===== 田畑・植生 ===== */
+  { name:"田", yomi:"た", svg:S(
+    '<g fill="currentColor"><rect x="36" y="27" width="9" height="46" rx="4.5"/><rect x="55" y="27" width="9" height="46" rx="4.5"/></g>') },
+
+  { name:"畑", yomi:"はたけ", svg:S(
+    '<path d="M32 38 L50 66 L68 38" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>') },
+
+  { name:"果樹園", yomi:"かじゅえん", svg:S(
+    '<circle cx="50" cy="58" r="16" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<line x1="50" y1="42" x2="50" y2="26" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>') },
+
+  { name:"茶畑", yomi:"ちゃばたけ", svg:S(
+    '<g fill="currentColor"><circle cx="50" cy="35" r="8"/><circle cx="37" cy="58" r="8"/><circle cx="63" cy="58" r="8"/></g>') },
+
+  { name:"広葉樹林", yomi:"こうようじゅりん", svg:S(
+    '<circle cx="47" cy="46" r="18" fill="none" stroke="currentColor" stroke-width="6"/>'+
+    '<path d="M59 59 L70 72" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>') },
+
+  { name:"針葉樹林", yomi:"しんようじゅりん", svg:S(
+    '<path d="M34 60 L50 28 L66 60" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<line x1="50" y1="56" x2="50" y2="74" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>') },
+
+  { name:"荒地", yomi:"あれち", svg:S(
+    '<g stroke="currentColor" stroke-width="6" stroke-linecap="round">'+
+    '<line x1="37" y1="66" x2="37" y2="44"/>'+
+    '<line x1="50" y1="70" x2="50" y2="36"/>'+
+    '<line x1="63" y1="66" x2="63" y2="46"/></g>') }
+];
+
+var TOTAL = SYMBOLS.length;
+
+/* ========= ふりがな付き名前 ========= */
+function rubyName(sym){
+  return '<ruby>'+sym.name+'<rt>'+sym.yomi+'</rt></ruby>';
+}
+
+/* ========= サウンド（Web Audio）========= */
+var audioCtx = null;
+var soundOn = true;
+function ensureAudio(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ audioCtx=null; }
+  }
+  if(audioCtx && audioCtx.state==="suspended"){ audioCtx.resume(); }
+}
+function beep(freq, dur){
+  if(!soundOn) return;
+  ensureAudio();
+  if(!audioCtx) return;
+  var t = audioCtx.currentTime;
+  var o = audioCtx.createOscillator();
+  var g = audioCtx.createGain();
+  o.type = "sine";
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.18, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(t); o.stop(t+dur+0.02);
+}
+function soundReveal(){ beep(660, 0.14); }
+function soundNext(){ beep(520, 0.12); setTimeout(function(){ beep(700,0.12); }, 90); }
+
+/* ========= 状態 ========= */
+var selectedCount = 5;
+var deck = [];
+var idx = 0;
+var revealed = false;
+
+/* ========= 要素 ========= */
+var elSettings = document.getElementById("settings");
+var elFlash = document.getElementById("flash");
+var elResult = document.getElementById("result");
+var elCard = document.getElementById("card");
+var elCardSym = document.getElementById("cardSym");
+var elNameArea = document.getElementById("nameArea");
+var elHintText = document.getElementById("hintText");
+var elPNow = document.getElementById("pNow");
+var elPTotal = document.getElementById("pTotal");
+var elDots = document.getElementById("dots");
+
+/* ========= 画面切り替え ========= */
+function showScreen(name){
+  elSettings.classList.toggle("hidden", name!=="settings");
+  elFlash.classList.toggle("hidden", name!=="flash");
+  elResult.classList.toggle("hidden", name!=="result");
+}
+
+/* ========= 一覧を作る ========= */
+function buildList(){
+  document.getElementById("allUnit").textContent = TOTAL+"もん";
+  document.getElementById("listCnt").textContent = "ぜんぶで "+TOTAL+"こ";
+  var grid = document.getElementById("listGrid");
+  var html = "";
+  for(var i=0;i<SYMBOLS.length;i++){
+    var s = SYMBOLS[i];
+    html += '<div class="cell"><div class="sym">'+s.svg+'</div>'+
+            '<div class="nm">'+rubyName(s)+'</div></div>';
+  }
+  grid.innerHTML = html;
+}
+
+/* ========= シャッフル（Fisher-Yates）========= */
+function shuffle(arr){
+  var a = arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+/* ========= ゲーム開始 ========= */
+function startGame(count){
+  var n = (count==="all") ? TOTAL : Math.min(count, TOTAL);
+  deck = shuffle(SYMBOLS).slice(0, n);
+  idx = 0;
+  revealed = false;
+  ensureAudio();
+  buildDots();
+  showScreen("flash");
+  renderCard();
+}
+
+function buildDots(){
+  var html = "";
+  for(var i=0;i<deck.length;i++){ html += '<span class="dot" data-i="'+i+'"></span>'; }
+  elDots.innerHTML = html;
+}
+function updateDots(){
+  var dots = elDots.children;
+  for(var i=0;i<dots.length;i++){
+    dots[i].className = "dot" + (i<idx?" done":"") + (i===idx?" now":"");
+  }
+}
+
+/* ========= カード描画 ========= */
+function renderCard(){
+  var s = deck[idx];
+  elCardSym.innerHTML = s.svg;
+  elNameArea.innerHTML = '<div class="nm">'+rubyName(s)+'</div>';
+  elCard.classList.remove("revealed");
+  revealed = false;
+  elHintText.textContent = "タップして こたえを みる";
+  elPNow.textContent = (idx+1);
+  elPTotal.textContent = deck.length;
+  updateDots();
+}
+
+/* ========= カードをタップ ========= */
+function tapCard(){
+  if(!revealed){
+    revealed = true;
+    elCard.classList.add("revealed");
+    elHintText.textContent = "タップして つぎへ";
+    soundReveal();
+  } else {
+    idx++;
+    if(idx >= deck.length){
+      soundNext();
+      showResult();
+    } else {
+      soundNext();
+      renderCard();
+    }
+  }
+}
+
+function showResult(){
+  var msgs = ["よく がんばったね！","すごい！ ぜんぶ みたね！","地図記号 はかせだね！","バッチリ だね！"];
+  document.getElementById("resultMsg").textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  showScreen("result");
+}
+
+/* ========= イベント ========= */
+// 問題数の選択
+var countRow = document.getElementById("countRow");
+countRow.addEventListener("click", function(e){
+  var btn = e.target.closest(".count-btn");
+  if(!btn) return;
+  var btns = countRow.querySelectorAll(".count-btn");
+  for(var i=0;i<btns.length;i++){ btns[i].setAttribute("aria-pressed","false"); }
+  btn.setAttribute("aria-pressed","true");
+  var c = btn.getAttribute("data-count");
+  selectedCount = (c==="all") ? "all" : parseInt(c,10);
+});
+
+document.getElementById("startBtn").addEventListener("click", function(){ startGame(selectedCount); });
+elCard.addEventListener("click", tapCard);
+elCard.addEventListener("keydown", function(e){
+  if(e.key===" "||e.key==="Enter"||e.key==="Spacebar"){ e.preventDefault(); tapCard(); }
+});
+document.getElementById("quitBtn").addEventListener("click", function(){ showScreen("settings"); });
+document.getElementById("againBtn").addEventListener("click", function(){ startGame(deck.length); });
+document.getElementById("backBtn").addEventListener("click", function(){ showScreen("settings"); });
+
+// サウンド切り替え
+var soundToggle = document.getElementById("soundToggle");
+soundToggle.addEventListener("click", function(){
+  soundOn = !soundOn;
+  soundToggle.textContent = soundOn ? "🔊" : "🔈";
+  if(soundOn){ ensureAudio(); beep(660,0.1); }
+});
+
+/* ========= 初期化 ========= */
+buildList();
+showScreen("settings");
+</script>
+</body>
+</html>
